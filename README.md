@@ -20,13 +20,28 @@
     PowerShell Ver. : 5.1
 
 .USAGE
+    Put any usage instructions here.
+    Example syntax:
     PS C:\> .\STIG-ID-WN11-CC-000090.ps1
 #>
 
+# Define the registry path and value for WN11-CC-000090
 $registryPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}"
 $valueName = "NoGPOListChanges"
-$valueData = 0
+$valueData = 0 # 0x00000000 in hexadecimal
 
-if (-not (Test-Path $registryPath)) { New-Item -Path $registryPath -Force }
+# Check if the registry path exists, if not create it
+if (-not (Test-Path $registryPath)) {
+    New-Item -Path $registryPath -Force
+}
+
+# Set the NoGPOListChanges value
 Set-ItemProperty -Path $registryPath -Name $valueName -Value $valueData -Type DWord
+
+# Output success message
 Write-Host "Registry value '$valueName' set to '$valueData' at '$registryPath'."
+
+# Confirmation of success
+Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}" -Name "NoGPOListChanges"
+# Expected Value: NoGPOListChanges = 0
+
